@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al-Haqq Model College</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#f4f6f8;color:#222}
+header{background:#0b6b3a;color:#fff;padding:18px 15px;text-align:center}
+header h1{margin:0;font-size:24px}
+header p{margin:5px 0 0;opacity:.9}
+.hero{background:#fff;margin:15px;border-radius:12px;padding:20px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.hero h2{color:#0b6b3a;margin:0}
+.hero p{color:#555}
+.card{background:#fff;margin:15px;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+input,select,button{width:100%;padding:12px;margin:7px 0;border-radius:8px;border:1px solid #ddd;font-size:15px}
+button{background:#0b6b3a;color:#fff;border:none;font-weight:bold;cursor:pointer}
+button.secondary{background:#fff;color:#0b6b3a;border:2px solid #0b6b3a}
+.tabs{display:flex;gap:10px}
+.tabs button{flex:1}
+.hidden{display:none}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #eee;padding:8px;text-align:left;font-size:14px}
+th{background:#0b6b3a;color:#fff}
+.badge{display:inline-block;background:#e8f5ee;color:#0b6b3a;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+footer{text-align:center;padding:20px;color:#888;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<h1>🕌 Al-Haqq Model College</h1>
+<p>Knowledge • Faith • Excellence | Lagos, Nigeria</p>
+</header>
+
+<div class="hero">
+<h2>Welcome to Al-Haqq Model College</h2>
+<p>Staff can add results. Students can login and see their results instantly.</p>
+<span class="badge">JSS 1 - SS 3</span> <span class="badge">Admissions Open</span>
+</div>
+
+<div id="authCard" class="card">
+<div class="tabs">
+<button id="loginTab" onclick="showTab('login')">Login</button>
+<button id="regTab" class="secondary" onclick="showTab('register')">Register</button>
+</div>
+
+<div id="loginBox">
+<h3>Login</h3>
+<select id="loginRole"><option value="Staff">Staff</option><option value="Student">Student</option></select>
+<input id="loginEmail" placeholder="Gmail e.g musa.test@gmail.com">
+<input id="loginPass" type="password" placeholder="Password">
+<select id="loginClass"><option value="">Select Class (Student only)</option><option>JSS 1</option><option>JSS 2</option><option>JSS 3</option><option>SS 1</option><option>SS 2</option><option>SS 3</option></select>
+<button onclick="doLogin()">Login</button>
+<p id="loginMsg" style="color:red"></p>
+</div>
+
+<div id="registerBox" class="hidden">
+<h3>Register</h3>
+<input id="regName" placeholder="Full Name e.g Musa Ahmed">
+<select id="regRole" onchange="toggleRegClass()"><option value="Staff">Staff</option><option value="Student">Student</option></select>
+<input id="regEmail" placeholder="Gmail">
+<input id="regPass" type="password" placeholder="Password e.g 1234">
+<select id="regClass"><option value="">Select Class (Student only)</option><option>JSS 1</option><option>JSS 2</option><option>JSS 3</option><option>SS 1</option><option>SS 2</option><option>SS 3</option></select>
+<button onclick="doRegister()">Register</button>
+<p id="regMsg" style="color:green"></p>
+</div>
+</div>
+
+<div id="staffBox" class="card hidden">
+<h3>Staff Dashboard - <span id="staffName"></span></h3>
+<p>Add Result for Student</p>
+<input id="stuEmail" placeholder="Student Gmail e.g musa.test@gmail.com">
+<select id="resClass"><option>JSS 1</option><option>JSS 2</option><option>JSS 3</option><option>SS 1</option><option>SS 2</option><option>SS 3</option></select>
+<select id="resSubject"><option>Maths</option><option>English</option><option>Islamic Studies</option><option>Quran</option><option>Science</option><option>Social Studies</option><option>Computer</option><option>Arabic</option></select>
+<input id="resScore" type="number" placeholder="Score e.g 80">
+<button onclick="saveResult()">Save Result</button>
+<p id="saveMsg" style="color:green"></p>
+<button class="secondary" onclick="logout()">Logout</button>
+</div>
+
+<div id="studentBox" class="card hidden">
+<h3>Student Dashboard - <span id="studentName"></span></h3>
+<p>Class: <b id="studentClass"></b> | Gmail: <span id="studentEmail"></span></p>
+<h4>My Results</h4>
+<div id="resultsTable">No results yet.</div>
+<button class="secondary" onclick="logout()">Logout</button>
+</div>
+
+<div class="card">
+<h3>About Our School</h3>
+<p>Al-Haqq Model College combines strong Islamic values with excellent Western education. We train students to be God-fearing, disciplined and academically excellent.</p>
+<p><b>📍 Location:</b> Lagos, Nigeria<br><b>📞 Contact:</b> Ask admin for school phone<br><b>🕐 Classes:</b> JSS 1 to SS 3</p>
+</div>
+
+<footer>© 2026 Al-Haqq Model College - All Rights Reserved</footer>
+
+<script>
+function getUsers(){return JSON.parse(localStorage.getItem('alhaqq_users')||'[]')}
+function saveUsers(u){localStorage.setItem('alhaqq_users',JSON.stringify(u))}
+function getResults(){return JSON.parse(localStorage.getItem('alhaqq_results')||'[]')}
+function showTab(t){
+document.getElementById('loginBox').classList.toggle('hidden',t!=='login');
+document.getElementById('registerBox').classList.toggle('hidden',t!=='register');
+document.getElementById('loginTab').className=t==='login'?'':'secondary';
+document.getElementById('regTab').className=t==='register'?'':'secondary';
+}
+function toggleRegClass(){}
+function doRegister(){
+var name=document.getElementById('regName').value.trim();
+var role=document.getElementById('regRole').value;
+var email=document.getElementById('regEmail').value.trim().toLowerCase();
+var pass=document.getElementById('regPass').value;
+var cls=document.getElementById('regClass').value;
+if(!name||!email||!pass){document.getElementById('regMsg').innerText='Fill name, gmail and password';return}
+if(role==='Student'&&!cls){document.getElementById('regMsg').innerText='Student must pick class';return}
+var users=getUsers();
+if(users.find(u=>u.email===email)){document.getElementById('regMsg').innerText='This Gmail already registered. Go to Login.';return}
+users.push({name:name,role:role,email:email,pass:pass,cls:cls});
+saveUsers(users);
+document.getElementById('regMsg').innerText='Registered
